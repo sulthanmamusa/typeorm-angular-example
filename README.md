@@ -12,4 +12,6 @@ with few change for smooth typeorm development in browser.
 
 **TypeORM** (https://typeorm.io/)
 
+**SQL.js** (https://sql.js.org)
+
 
