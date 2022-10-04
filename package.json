@@ -23,7 +23,6 @@
     "tslib": "^2.3.0",
     "typeorm": "^0.3.10",
     "typescript-class-helpers": "^13.0.25",
-    "util": "^0.12.4",
     "zone.js": "~0.11.4"
   },
   "browser": {
@@ -33,7 +32,11 @@
     "fs": false,
     "path": false,
     "stream": false,
-    "tls": false
+    "tls": false,
+    "crypto": false,
+    "react-native-sqlite-storage": false,
+    "timers": false,
+    "os": false
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.3.9",
