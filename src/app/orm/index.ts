@@ -1,52 +1,46 @@
-import { createConnection } from "typeorm/browser";
-import { Author } from "./entity/Author";
-import { Post } from "./entity/Post";
-import { Category } from "./entity/Category";
-
+import initSqlJs from 'sql.js';
+import { DataSource } from "typeorm";
+import { Author, Category, Post } from "./entity";
 
 export async function orm() {
-  console.log('TRYING TO CONNECT')
-  const connection = await createConnection({
-    type: 'sqljs',
-    location: "tasdest",
-    autoSave: true,
-    entities: [
-      Author,
-      Post,
-      Category
-    ],
-    logging: ['query', 'schema'],
-    synchronize: true
-  })
+    const SQL = await initSqlJs({
+        locateFile: file => `https://sql.js.org/dist/${file}`
+    });
+    // @ts-ignore
+    window['SQL'] = SQL;
+    const dataSource = new DataSource({
+        type: "sqljs",
+        location: "/assets/test.db",
+        autoSave: true,
+        entities: [
+            Author,
+            Category,
+            Post
+        ],
+        synchronize: true
+      });    
+      await dataSource.initialize();
+      if (dataSource.hasMetadata(Post)){
+        const postRepository = dataSource.getRepository(Post);
+        const post = await postRepository.find();
+        console.log(post);
+      } else {
+        const category1 = new Category();
+        category1.name = "TypeScript";
 
+        const category2 = new Category();
+        category2.name = "Programming";
 
-  // .then(async connection => {
-  document.write("Writing new post...<br>");
+        const author = new Author();
+        author.name = "Person";
 
-  const category1 = new Category();
-  category1.name = "TypeScript";
+        const post = new Post();
+        post.title = "Control flow based type analysis";
+        post.text = `TypeScript 2.0 implements a control flow-based type analysis for local variables and parameters.`;
+        post.categories = [category1, category2];
+        post.author = author;
 
-  const category2 = new Category();
-  category2.name = "Programming";
-
-  const author = new Author();
-  author.name = "Person";
-
-  const post = new Post();
-  post.title = "Control flow based type analysis";
-  post.text = `TypeScript 2.0 implements a control flow-based type analysis for local variables and parameters.`;
-  post.categories = [category1, category2];
-  post.author = author;
-
-  const postRepository = connection.getRepository(Post);
-  await postRepository.save(post);
-
-  document.write("<br>Post has been save:<br>");
-  document.write("<pre>", JSON.stringify(post, null, 2), "</pre>");
-  console.log("Post has been saved: ", post);
-
-  // }).catch(error => {
-  //   document.write("<b>Error: ", JSON.stringify(error, null, 2), "</b>");
-  //   console.log("Error: ", error)
-  // });
+        const postRepository = dataSource.getRepository(Post);
+        await postRepository.save(post);
+      }
 }
