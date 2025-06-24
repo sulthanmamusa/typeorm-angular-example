@@ -30,7 +30,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Test stage"
-                    test -f dist/index.html
+                    test -f dist/typeorm-angular-example/index.html
                     npm ci
                     npm run test
                 '''
