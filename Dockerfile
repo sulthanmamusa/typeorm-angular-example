@@ -1,6 +1,9 @@
 FROM node:18-alpine
 
-# Install Chromium and necessary dependencies
+# Use faster mirror
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
+# Install Chromium and dependencies
 RUN apk add --no-cache \
     chromium \
     nss \
@@ -9,11 +12,5 @@ RUN apk add --no-cache \
     ttf-freefont \
     bash
 
-# Let Karma know where to find Chrome
 ENV CHROME_BIN=/usr/bin/chromium-browser
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-
-# Set working directory
-WORKDIR /app
-
-# Copy and install dependencies later in Jenkins pipeline
