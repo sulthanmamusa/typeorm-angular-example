@@ -1,5 +1,14 @@
 pipeline {
-    agent any
+    agent {
+        dockerfile {
+            filename 'Dockerfile'
+            dir '.'
+        }
+    }
+
+    environment {
+        CHROME_BIN = '/usr/bin/chromium-browser'
+    }
 
     stages {
         stage('Build') {
@@ -32,7 +41,7 @@ pipeline {
                     echo "Test stage"
                     test -f dist/typeorm-angular-example/index.html
                     #npm ci
-                    npm run test
+                    npm run test:ci
                 '''
             }
         }
